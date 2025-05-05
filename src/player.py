@@ -19,8 +19,9 @@ class Player:
         if keys[pygame.K_DOWN] and self.__rect.bottomright[1] < GAME_FIELD_HEIGHT:
             self.__rect.y += PLAYER_SPEED
 
-    def draw(self) -> None:
-        x, y, width, height = self.__rect.x, self.__rect.y, self.__rect.w, self.__rect.h
+    def draw(self, scale: float) -> None:
+        x, y = self.__rect.x * scale, self.__rect.y * scale
+        width, height = self.__rect.w * scale, self.__rect.h * scale
         glColor3f(0, 0, 1)
         glVertex2f(x, y)
         glVertex2f(x + width, y)
