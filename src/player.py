@@ -6,7 +6,7 @@ from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH, PLAYER_SPEED
 
 
 class Player:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__rect = pygame.Rect(GAME_FIELD_WIDTH // 2, GAME_FIELD_HEIGHT // 2, 100, 100)
 
     def update(self, keys: ScancodeWrapper) -> None:
@@ -19,11 +19,9 @@ class Player:
         if keys[pygame.K_DOWN] and self.__rect.bottomright[1] < GAME_FIELD_HEIGHT:
             self.__rect.y += PLAYER_SPEED
 
-    def draw(self, scale: float) -> None:
-        x, y = self.__rect.x * scale, self.__rect.y * scale
-        width, height = self.__rect.w * scale, self.__rect.h * scale
+    def draw(self) -> None:
         glColor3f(0, 0, 1)
-        glVertex2f(x, y)
-        glVertex2f(x + width, y)
-        glVertex2f(x + width, y + height)
-        glVertex2f(x, y + height)
+        glVertex2f(self.__rect.x, self.__rect.y)
+        glVertex2f(self.__rect.x + self.__rect.w, self.__rect.y)
+        glVertex2f(self.__rect.x + self.__rect.w, self.__rect.y + self.__rect.h)
+        glVertex2f(self.__rect.x, self.__rect.y + self.__rect.h)
