@@ -3,10 +3,10 @@ import pygame
 import ctypes
 from pygame.locals import DOUBLEBUF, OPENGL, RESIZABLE
 from OpenGL.GL import *  # type: ignore
-from OpenGL.GLU import *
+from OpenGL.GLU import *  # type: ignore
 
 from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH
-from player import Player  # type: ignore
+from player import Player
 
 
 # Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
