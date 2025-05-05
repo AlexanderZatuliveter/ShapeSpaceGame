@@ -2,6 +2,8 @@ import sys
 import pygame
 import ctypes
 from pygame.locals import DOUBLEBUF, OPENGL, RESIZABLE
+from OpenGL.GL import *  # type: ignore
+from OpenGL.GLU import *  # type: ignore
 
 
 # Set process DPI awareness. Use 1 for "System DPI Awareness", or 2 for "Per-Monitor DPI Awareness"
@@ -20,6 +22,9 @@ pygame.display.set_caption("ShapeSpaceGame")
 clock = pygame.time.Clock()
 
 while True:
+    glClearColor(150 / 255, 150 / 255, 150 / 255, 1)  # Устанавливаем цвет фона
+    glClear(GL_COLOR_BUFFER_BIT)  # Очищаем экран
+
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
@@ -29,8 +34,6 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-
-    screen.fill((0, 0, 0))
 
     # Update the display
     pygame.display.flip()
