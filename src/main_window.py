@@ -14,14 +14,14 @@ from player import Player
 
 class MainWindow:
 
-    def __init__(self, screen: Surface, clock: Clock):
+    def __init__(self, screen: Surface, clock: Clock) -> None:
         self.__screen = screen
         self.__clock = clock
         self.__past_screen_size = self.__screen.get_size()
 
         self.__player = Player()
 
-    def __resize_display(self, new_screen_size: Tuple[int, int]):
+    def __resize_display(self, new_screen_size: Tuple[int, int]) -> None:
         """Handle window resizing while maintaining the aspect ratio."""
 
         if self.__past_screen_size == new_screen_size:
@@ -54,7 +54,7 @@ class MainWindow:
         glLoadIdentity()
         glOrtho(0, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, 0, -1, 1)
 
-    def show(self):
+    def show(self) -> None:
 
         self.__set_screen_size(self.__screen.get_size())
 
@@ -68,7 +68,6 @@ class MainWindow:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         while True:
-
             events = pygame.event.get()
             keys = pygame.key.get_pressed()
 
@@ -81,7 +80,7 @@ class MainWindow:
             self.__player.draw()
             self.end_draw()
 
-    def update(self, events):
+    def update(self, events) -> None:
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -93,7 +92,7 @@ class MainWindow:
             if event.type == pygame.VIDEORESIZE:
                 self.__resize_display(event.size)
 
-    def begin_draw(self):
+    def begin_draw(self) -> None:
         # Clear screen
         glClear(GL_COLOR_BUFFER_BIT)
 
@@ -113,7 +112,7 @@ class MainWindow:
         # Draw things
         glBegin(GL_QUADS)
 
-    def end_draw(self):
+    def end_draw(self) -> None:
         glEnd()
         pygame.display.flip()
         self.__clock.tick(60)

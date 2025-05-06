@@ -2,22 +2,33 @@ import pygame
 from pygame.key import ScancodeWrapper
 from OpenGL.GL import *  # type: ignore
 
-from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH, PLAYER_SPEED
+from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH, PLAYER_JUMP_FORCE, PLAYER_SPEED, GRAVITY
 
 
 class Player:
     def __init__(self) -> None:
         self.__rect = pygame.Rect(GAME_FIELD_WIDTH // 2, GAME_FIELD_HEIGHT // 2, 100, 100)
 
+        self.__velocity_y = 0
+        self.__gravity = GRAVITY
+        self.__jump_force = -PLAYER_JUMP_FORCE  # если хочешь добавить прыжок
+
     def update(self, keys: ScancodeWrapper) -> None:
-        if keys[pygame.K_LEFT] and self.__rect.topleft[0] > 0:
-            self.__rect.x -= PLAYER_SPEED
-        if keys[pygame.K_RIGHT] and self.__rect.bottomright[0] < GAME_FIELD_WIDTH:
-            self.__rect.x += PLAYER_SPEED
-        if keys[pygame.K_UP] and self.__rect.topleft[1] > 0:
-            self.__rect.y -= PLAYER_SPEED
-        if keys[pygame.K_DOWN] and self.__rect.bottomright[1] < GAME_FIELD_HEIGHT:
-            self.__rect.y += PLAYER_SPEED
+        if keys[pygame.K_a] and self.__rect.topleft[0] > 0:
+            self.__rect.centerx -= PLAYER_SPEED
+        if keys[pygame.K_d] and self.__rect.bottomright[0] < GAME_FIELD_WIDTH:
+            self.__rect.centerx += PLAYER_SPEED
+
+        if keys[pygame.K_w] and self.__rect.bottom >= GAME_FIELD_HEIGHT:
+            self.__velocity_y = self.__jump_force
+
+        # Gravitation
+        self.__velocity_y += self.__gravity
+        self.__rect.centery += int(self.__velocity_y)
+
+        if self.__rect.bottom >= GAME_FIELD_HEIGHT:
+            self.__rect.bottom = GAME_FIELD_HEIGHT
+            self.__velocity_y = 0
 
     def draw(self) -> None:
         glColor3f(0, 0, 1)
