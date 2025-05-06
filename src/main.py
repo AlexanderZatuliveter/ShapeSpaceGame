@@ -22,5 +22,5 @@ pygame.display.set_caption("ShapeSpaceGame")
 
 clock = pygame.time.Clock()
 
-main_window = MainWindow(screen)
-main_window.show(clock)
+main_window = MainWindow(screen, clock)
+main_window.show()

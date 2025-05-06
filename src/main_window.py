@@ -14,11 +14,35 @@ from player import Player
 
 class MainWindow:
 
-    def __init__(self, screen: Surface):
+    def __init__(self, screen: Surface, clock: Clock):
         self.__screen = screen
+        self.__clock = clock
         self.__past_screen_size = self.__screen.get_size()
 
         self.__player = Player()
+
+    def __resize_display(self, new_screen_size: Tuple[int, int]):
+        """Handle window resizing while maintaining the aspect ratio."""
+
+        if self.__past_screen_size == new_screen_size:
+            return
+
+        ratio_w = new_screen_size[0] / GAME_FIELD_WIDTH
+        ratio_h = new_screen_size[1] / GAME_FIELD_HEIGHT
+
+        if self.__past_screen_size[0] != new_screen_size[0] and self.__past_screen_size[1] != new_screen_size[1]:
+            ratio = min(ratio_w, ratio_h)
+        elif self.__past_screen_size[0] != new_screen_size[0]:
+            ratio = ratio_w
+        elif self.__past_screen_size[1] != new_screen_size[1]:
+            ratio = ratio_h
+
+        new_width = int(GAME_FIELD_WIDTH * ratio)
+        new_height = int(GAME_FIELD_HEIGHT * ratio)
+
+        self.__set_screen_size((new_width, new_height))
+
+        self.__past_screen_size = pygame.display.get_window_size()
 
     def __set_screen_size(self, screen_size: Tuple[int, int]) -> None:
         # Set up the viewport to maintain aspect ratio
@@ -30,28 +54,7 @@ class MainWindow:
         glLoadIdentity()
         glOrtho(0, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT, 0, -1, 1)
 
-    def __resize_display(self, past_screen_size: Tuple[int, int], new_screen_size: Tuple[int, int]):
-        """Handle window resizing while maintaining the aspect ratio."""
-
-        if past_screen_size == new_screen_size:
-            return
-
-        ratio_w = new_screen_size[0] / GAME_FIELD_WIDTH
-        ratio_h = new_screen_size[1] / GAME_FIELD_HEIGHT
-
-        if past_screen_size > new_screen_size:
-            ratio = min(ratio_w, ratio_h)
-        else:
-            ratio = max(ratio_w, ratio_h)
-
-        past_screen_size = pygame.display.get_window_size()
-
-        new_width = int(GAME_FIELD_WIDTH * ratio)
-        new_height = int(GAME_FIELD_HEIGHT * ratio)
-
-        self.__set_screen_size((new_width, new_height))
-
-    def show(self, clock: Clock):
+    def show(self):
 
         self.__set_screen_size(self.__screen.get_size())
 
@@ -69,41 +72,48 @@ class MainWindow:
             events = pygame.event.get()
             keys = pygame.key.get_pressed()
 
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
-                if event.type == pygame.VIDEORESIZE:
-                    self.__past_screen_size = self.__screen.get_size()
-                    self.__resize_display(self.__past_screen_size, event.size)
-
+            # Updates
+            self.update(events)
             self.__player.update(keys)
 
-            # Clear screen
-            glClear(GL_COLOR_BUFFER_BIT)
-
-            # Set modelview matrix
-            glMatrixMode(GL_MODELVIEW)
-            glLoadIdentity()
-
-            # Draw game field border (10 pixels from each edge)
-            glColor3f(1, 1, 1)
-            glBegin(GL_LINE_LOOP)
-            glVertex2f(10, 10)
-            glVertex2f(GAME_FIELD_WIDTH - 10, 10)
-            glVertex2f(GAME_FIELD_WIDTH - 10, GAME_FIELD_HEIGHT - 10)
-            glVertex2f(10, GAME_FIELD_HEIGHT - 10)
-            glEnd()
-
-            # Draw things
-            glBegin(GL_QUADS)
+            # Draws
+            self.begin_draw()
             self.__player.draw()
-            glEnd()
+            self.end_draw()
 
-            pygame.display.flip()
+    def update(self, events):
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == pygame.VIDEORESIZE:
+                self.__resize_display(event.size)
 
-            clock.tick(60)
+    def begin_draw(self):
+        # Clear screen
+        glClear(GL_COLOR_BUFFER_BIT)
+
+        # Set modelview matrix
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+
+        # Draw game field border (10 pixels from each edge)
+        glColor3f(1, 1, 1)
+        glBegin(GL_LINE_LOOP)
+        glVertex2f(10, 10)
+        glVertex2f(GAME_FIELD_WIDTH - 10, 10)
+        glVertex2f(GAME_FIELD_WIDTH - 10, GAME_FIELD_HEIGHT - 10)
+        glVertex2f(10, GAME_FIELD_HEIGHT - 10)
+        glEnd()
+
+        # Draw things
+        glBegin(GL_QUADS)
+
+    def end_draw(self):
+        glEnd()
+        pygame.display.flip()
+        self.__clock.tick(60)
