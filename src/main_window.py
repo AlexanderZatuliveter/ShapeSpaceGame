@@ -8,8 +8,10 @@ from pygame.locals import DOUBLEBUF, OPENGL, RESIZABLE
 from OpenGL.GL import *  # type: ignore
 from OpenGL.GLU import *  # type: ignore
 
+from block import Block
 from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH
 from player import Player
+from position import IntPosition
 
 
 class MainWindow:
@@ -18,8 +20,8 @@ class MainWindow:
         self.__screen = screen
         self.__clock = clock
         self.__past_screen_size = self.__screen.get_size()
-
-        self.__player = Player()
+        self.__players = [Player() for i in range(1, 2)]
+        self.__block = Block(IntPosition(500, 500))
 
     def __resize_display(self, new_screen_size: Tuple[int, int]) -> None:
         """Handle window resizing while maintaining the aspect ratio."""
@@ -73,11 +75,14 @@ class MainWindow:
 
             # Updates
             self.update(events)
-            self.__player.update(keys)
+            for player in self.__players:
+                player.update(keys)
 
             # Draws
             self.begin_draw()
-            self.__player.draw()
+            for player in self.__players:
+                player.draw()
+            self.__block.draw((500, 500), 100)
             self.end_draw()
 
     def update(self, events) -> None:

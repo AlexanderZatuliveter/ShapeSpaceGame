@@ -1,17 +1,23 @@
 import pygame
 from pygame.key import ScancodeWrapper
 from OpenGL.GL import *  # type: ignore
-
+import random
 from consts import GAME_FIELD_HEIGHT, GAME_FIELD_WIDTH, PLAYER_JUMP_FORCE, PLAYER_SPEED, GRAVITY
 
 
 class Player:
     def __init__(self) -> None:
-        self.__rect = pygame.Rect(GAME_FIELD_WIDTH // 2, GAME_FIELD_HEIGHT // 2, 100, 100)
+        # self.__rect = pygame.Rect(GAME_FIELD_WIDTH // 2, GAME_FIELD_HEIGHT // 2, 100, 100)
+        self.__rect = pygame.Rect(
+            int(GAME_FIELD_WIDTH * random.random()),
+            int(GAME_FIELD_HEIGHT * random.random()),
+            100,
+            100
+        )
 
         self.__velocity_y = 0
         self.__gravity = GRAVITY
-        self.__jump_force = -PLAYER_JUMP_FORCE  # если хочешь добавить прыжок
+        self.__jump_force = -PLAYER_JUMP_FORCE
 
     def update(self, keys: ScancodeWrapper) -> None:
         if keys[pygame.K_a] and self.__rect.topleft[0] > 0:
