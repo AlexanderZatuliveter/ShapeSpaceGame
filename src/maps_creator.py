@@ -12,7 +12,7 @@ ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 pygame.init()
 
-screen = pygame.display.set_mode((1920, 1080), pygame.OPENGL | pygame.DOUBLEBUF)
+screen = pygame.display.set_mode((2880, 1080), pygame.OPENGL | pygame.DOUBLEBUF)
 screen_size = screen.get_size()
 glViewport(0, 0, *screen_size)
 

@@ -7,7 +7,7 @@ import json
 
 class GameField:
     def __init__(self, width, height):
-        self.__block_size = 100
+        self.__block_size = 53
         self.width = width
         self.height = height
         self.field: Dict[tuple[int, int], Block] = {}
@@ -47,7 +47,7 @@ class GameField:
     def put_block(self, pos: IntPosition):
         key = (pos.x, pos.y)
         if key not in self.field:
-            self.field[key] = Block(pos)
+            self.field[key] = Block()
 
     def hit_block(self, pos: IntPosition):
         key = (pos.x, pos.y)

@@ -31,14 +31,13 @@ from position import IntPosition
 
 
 class Block:
-    def __init__(self, pos: IntPosition) -> None:
-        # pos хранится просто для информации, не обязателен
-        self.pos = pos
+    def __init__(self) -> None:
+        pass
 
     def update(self) -> None:
         pass
 
-    def draw(self, pixel_pos: Tuple[int, int], size: int) -> None:
+    def draw(self, pixel_pos: Tuple[int, int], size: float) -> None:
         x, y = pixel_pos
 
         glColor3f(50 / 255, 50 / 255, 50 / 255)
