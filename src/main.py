@@ -1,7 +1,7 @@
 import sys
 import pygame
 import ctypes
-from pygame.locals import DOUBLEBUF, OPENGL, RESIZABLE
+from pygame.locals import DOUBLEBUF, OPENGL, RESIZABLE, FULLSCREEN
 from OpenGL.GL import *  # type: ignore
 from OpenGL.GLU import *  # type: ignore
 
@@ -31,6 +31,9 @@ def resize_display(screen_width: int, screen_height: int) -> None:
     """Handle window resizing while maintaining the aspect ratio."""
 
     global past_screen_size
+
+    if past_screen_size == (screen_width, screen_height):
+        return
 
     ratio_w = screen_width / GAME_FIELD_WIDTH
     ratio_h = screen_height / GAME_FIELD_HEIGHT
